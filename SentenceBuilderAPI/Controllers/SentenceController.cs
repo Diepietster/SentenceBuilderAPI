@@ -21,11 +21,11 @@ namespace SentenceBuilderAPI.Controllers
         }
 
         [HttpGet("GetAllSentences")]
-        public ActionResult<BaseResponse<List<Sentence>>> GetAllSentences()
+        public async Task<BaseResponse<List<Sentence>>> GetAllSentences()
         {
             try
             {
-                return _sentenceActions.GetAllSenctences();
+                return await _sentenceActions.GetAllSenctences();
             }
             catch (Exception ex)
             {

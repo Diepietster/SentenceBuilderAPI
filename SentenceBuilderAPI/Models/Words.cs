@@ -10,7 +10,10 @@ namespace SentenceBuilderAPI.Models
         public int WordId { get; set; }
 
         [Required]
+        [ForeignKey("WordType")]
         public int WordTypeId { get; set; }
+
+        public WordType WordType { get; set; }
 
         [Required]
         public string Word { get; set; }

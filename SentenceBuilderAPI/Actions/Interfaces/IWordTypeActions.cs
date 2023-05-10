@@ -6,6 +6,6 @@ namespace SentenceBuilderAPI.Actions.Interfaces
 {
     public interface IWordTypeActions
     {
-        ActionResult<BaseResponse<List<WordType>>> GetAllWordTypes();
+        Task<BaseResponse<List<WordType>>> GetAllWordTypes();
     }
 }

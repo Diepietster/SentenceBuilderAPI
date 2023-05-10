@@ -20,11 +20,11 @@ namespace SentenceBuilderAPI.Controllers
         }
 
         [HttpGet("GetAllWordTypes")]
-        public ActionResult<BaseResponse<List<WordType>>> GetAllWordTypes()
+        public async Task<BaseResponse<List<WordType>>> GetAllWordTypes()
         {
             try
             {
-                return _wordTypeActions.GetAllWordTypes();
+                return await _wordTypeActions.GetAllWordTypes();
             }
             catch(Exception ex) 
             {

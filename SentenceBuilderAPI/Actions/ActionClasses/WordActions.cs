@@ -4,6 +4,8 @@ using SentenceBuilderAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using SentenceBuilderAPI.Models.BaseResponse;
 using SentenceBuilderAPI.Models.DTOModels.WordDTO;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace SentenceBuilderAPI.Actions.ActionClasses
 {
@@ -11,22 +13,24 @@ namespace SentenceBuilderAPI.Actions.ActionClasses
     {
         private readonly ApplicationDbContext _db;
         private readonly IExceptionsLogActions _exceptionsLogActions;
+        private readonly IMapper _mapper;
 
-        public WordActions(ApplicationDbContext db, IExceptionsLogActions exceptionsLogActions)
+        public WordActions(ApplicationDbContext db, IExceptionsLogActions exceptionsLogActions, IMapper mapper)
         {
             _db = db;
             _exceptionsLogActions = exceptionsLogActions;
+            _mapper = mapper;
         }
 
-        public ActionResult<BaseResponse<List<Words>>> GetWordsByType(int wordTypeId)
+        public async Task<BaseResponse<List<Words>>> GetWordsByType(int wordTypeId)
         {
             try
             {
                 var response = new BaseResponse<List<Words>>();
-                var wordsByType = (from W in _db.Words
+                var wordsByType = await (from W in _db.Words
                                   join WT in _db.WordType on W.WordTypeId equals WT.WordTypeId
                                   where W.WordTypeId == wordTypeId
-                                  select W).ToList();
+                                  select W).ToListAsync();
 
                 if(wordsByType == null)
                 {
@@ -52,11 +56,8 @@ namespace SentenceBuilderAPI.Actions.ActionClasses
             try
             {
                 var response = new BaseResponse();
-                Words newWord = new()
-                {
-                    Word = word.Word,
-                    WordTypeId = word.WordTypeId
-                };
+                var newWord = _mapper.Map<Words>(word);
+
 
                 var addWord = await _db.Words.AddAsync(newWord);
                 var saveChange = await _db.SaveChangesAsync();

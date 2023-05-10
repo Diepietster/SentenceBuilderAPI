@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SentenceBuilderAPI.Actions.Interfaces;
 using SentenceBuilderAPI.Data;
 using SentenceBuilderAPI.Models;
@@ -17,12 +18,12 @@ namespace SentenceBuilderAPI.Actions.ActionClasses
             _exceptionsLogActions = exceptionsLogActions;
         }
 
-        public ActionResult<BaseResponse<List<WordType>>> GetAllWordTypes()
+        public async Task<BaseResponse<List<WordType>>> GetAllWordTypes()
         {
             try
             {
                 var response = new BaseResponse<List<WordType>>();
-                var getAllWordTypes = _db.WordType;
+                var getAllWordTypes = await _db.WordType.ToListAsync();
 
                 if (getAllWordTypes == null)
                 {
@@ -33,7 +34,7 @@ namespace SentenceBuilderAPI.Actions.ActionClasses
 
                 response.Success = true;
                 response.Message = "Successfully retrieved all word types.";
-                response.Data = getAllWordTypes.ToList();
+                response.Data = getAllWordTypes;
                 return response;
             }
             catch(Exception ex)

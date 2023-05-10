@@ -7,7 +7,7 @@ namespace SentenceBuilderAPI.Actions.Interfaces
 {
     public interface ISentenceActions
     {
-        ActionResult<BaseResponse<List<Sentence>>> GetAllSenctences();
+        Task<BaseResponse<List<Sentence>>> GetAllSenctences();
         Task<BaseResponse> CreateSentence(SentenceDTOCreate sentence);
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SentenceBuilderAPI.Actions.Interfaces;
 using SentenceBuilderAPI.Data;
 using SentenceBuilderAPI.Models;
@@ -11,19 +13,21 @@ namespace SentenceBuilderAPI.Actions.ActionClasses
     {
         private readonly ApplicationDbContext _db;
         private readonly IExceptionsLogActions _exceptionsLogActions;
+        private readonly IMapper _mapper;
 
-        public SentenceActions(ApplicationDbContext db, IExceptionsLogActions exceptionsLogActions)
+        public SentenceActions(ApplicationDbContext db, IExceptionsLogActions exceptionsLogActions, IMapper mapper)
         {
             _db = db;
             _exceptionsLogActions = exceptionsLogActions;
+            _mapper = mapper;
         }
 
-        public ActionResult<BaseResponse<List<Sentence>>> GetAllSenctences()
+        public async Task<BaseResponse<List<Sentence>>> GetAllSenctences()
         {
             try
             {
                 var response = new BaseResponse<List<Sentence>>();
-                var sentences = _db.Sentences;
+                var sentences = await _db.Sentences.ToListAsync();
 
                 if(sentences == null)
                 {
@@ -34,7 +38,7 @@ namespace SentenceBuilderAPI.Actions.ActionClasses
 
                 response.Success = true;
                 response.Message = "Successully retrieved all messages.";
-                response.Data = sentences.ToList();
+                response.Data = sentences;
                 return response;
             }
             catch(Exception ex)
@@ -49,11 +53,8 @@ namespace SentenceBuilderAPI.Actions.ActionClasses
             try
             {
                 var response = new BaseResponse();
-
-                Sentence newSentence = new Sentence() { 
-                    SentenceDesc = sentence.SentenceDesc,
-                    SentenceCreatedOn = DateTime.Now
-                };
+                var newSentence = _mapper.Map<Sentence>(sentence);
+                newSentence.SentenceCreatedOn = DateTime.Now;
 
                 var addSentence = await _db.AddAsync(newSentence);
                 var savedChanges = await _db.SaveChangesAsync();

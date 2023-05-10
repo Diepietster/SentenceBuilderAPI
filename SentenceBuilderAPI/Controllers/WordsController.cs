@@ -22,11 +22,11 @@ namespace SentenceBuilderAPI.Controllers
         }
 
         [HttpGet("GetAllWordsByType/{wordTypeId}")]
-        public ActionResult<BaseResponse<List<Words>>> GetAllWordsByType(int wordTypeId)
+        public async Task<BaseResponse<List<Words>>> GetAllWordsByType(int wordTypeId)
         {
             try
             {
-                return _wordActions.GetWordsByType(wordTypeId);
+                return await _wordActions.GetWordsByType(wordTypeId);
             }
             catch (Exception ex)
             {

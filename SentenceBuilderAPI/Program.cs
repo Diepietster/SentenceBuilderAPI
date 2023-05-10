@@ -2,6 +2,7 @@ using SentenceBuilderAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using SentenceBuilderAPI.Actions.Interfaces;
 using SentenceBuilderAPI.Actions.ActionClasses;
+using SentenceBuilderAPI.MappingConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddTransient<IWordActions, WordActions>();
 builder.Services.AddTransient<IExceptionsLogActions, LogExceptionActions>();
 builder.Services.AddTransient<IWordTypeActions, WordTypeActions>();
 builder.Services.AddControllers();
+
+builder.Services.AddAutoMapper(typeof(MappingConfig));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
