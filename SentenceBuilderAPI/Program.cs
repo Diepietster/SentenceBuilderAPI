@@ -8,11 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddTransient<ISentenceActions, SentenceActions>();
 builder.Services.AddTransient<IWordActions, WordActions>();
+builder.Services.AddTransient<IExceptionsLogActions, LogExceptionActions>();
+builder.Services.AddTransient<IWordTypeActions, WordTypeActions>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<AppliationDbContext>(option =>
+builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
 });

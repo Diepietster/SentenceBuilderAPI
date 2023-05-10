@@ -11,7 +11,7 @@ using SentenceBuilderAPI.Data;
 
 namespace SentenceBuilderAPI.Migrations
 {
-    [DbContext(typeof(AppliationDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20230509202934_AddDbTables")]
     partial class AddDbTables
     {

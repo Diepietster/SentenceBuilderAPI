@@ -14,9 +14,6 @@ namespace SentenceBuilderAPI.Models
         public string SentenceDesc { get; set; }
 
         [Required]
-        public string SentenceCeatedBy { get; set; }
-
-        [Required]
         public DateTime SentenceCreatedOn { get; set; }
     }
 }

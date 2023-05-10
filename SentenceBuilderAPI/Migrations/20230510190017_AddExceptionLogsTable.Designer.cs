@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SentenceBuilderAPI.Data;
 
@@ -11,9 +12,11 @@ using SentenceBuilderAPI.Data;
 namespace SentenceBuilderAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class AppliationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230510190017_AddExceptionLogsTable")]
+    partial class AddExceptionLogsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,6 +57,10 @@ namespace SentenceBuilderAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SentenceId"));
 
+                    b.Property<string>("SentenceCeatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("SentenceCreatedOn")
                         .HasColumnType("datetime2");
 
@@ -64,6 +71,49 @@ namespace SentenceBuilderAPI.Migrations
                     b.HasKey("SentenceId");
 
                     b.ToTable("Sentences");
+                });
+
+            modelBuilder.Entity("SentenceBuilderAPI.Models.UserRoles", b =>
+                {
+                    b.Property<int>("UserRoleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRoleId"));
+
+                    b.Property<string>("UserRoleType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserRoleId");
+
+                    b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("SentenceBuilderAPI.Models.Users", b =>
+                {
+                    b.Property<Guid>("UserKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserFirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserLastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserRole")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserKey");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SentenceBuilderAPI.Models.WordType", b =>

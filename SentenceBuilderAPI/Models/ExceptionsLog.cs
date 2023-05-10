@@ -3,18 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SentenceBuilderAPI.Models
 {
-    public class Users
+    public class ExceptionsLog
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid UserKey { get; set; }
-
-        public string UserFirstName { get; set; }
-        public string UserLastName { get; set; }
-
+        public int ExceptionId { get; set; }
         [Required]
-        public int UserRole { get; set; }
+        public string ExceptionMessage { get; set; }
         [Required]
-        public string UserEmail { get; set; }
+        public string MethodName { get; set; }
+
+        public DateTime ExceptionTime { get; set; }
+
     }
 }

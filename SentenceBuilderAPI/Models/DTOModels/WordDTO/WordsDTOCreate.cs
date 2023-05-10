@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SentenceBuilderAPI.DTOModels.WordDTO
+namespace SentenceBuilderAPI.Models.DTOModels.WordDTO
 {
     public class WordsDTOCreate
     {

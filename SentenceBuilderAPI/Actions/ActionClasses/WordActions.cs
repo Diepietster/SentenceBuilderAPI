@@ -2,23 +2,27 @@
 using SentenceBuilderAPI.Models;
 using SentenceBuilderAPI.Data;
 using Microsoft.AspNetCore.Mvc;
-using SentenceBuilderAPI.DTOModels.WordDTO;
+using SentenceBuilderAPI.Models.BaseResponse;
+using SentenceBuilderAPI.Models.DTOModels.WordDTO;
 
 namespace SentenceBuilderAPI.Actions.ActionClasses
 {
     public class WordActions: IWordActions
     {
-        private readonly AppliationDbContext _db;
+        private readonly ApplicationDbContext _db;
+        private readonly IExceptionsLogActions _exceptionsLogActions;
 
-        public WordActions(AppliationDbContext db)
+        public WordActions(ApplicationDbContext db, IExceptionsLogActions exceptionsLogActions)
         {
             _db = db;
+            _exceptionsLogActions = exceptionsLogActions;
         }
 
-        public ActionResult<IEnumerable<Words>> GetWordsByType(int wordTypeId)
+        public ActionResult<BaseResponse<List<Words>>> GetWordsByType(int wordTypeId)
         {
             try
             {
+                var response = new BaseResponse<List<Words>>();
                 var wordsByType = (from W in _db.Words
                                   join WT in _db.WordType on W.WordTypeId equals WT.WordTypeId
                                   where W.WordTypeId == wordTypeId
@@ -26,22 +30,28 @@ namespace SentenceBuilderAPI.Actions.ActionClasses
 
                 if(wordsByType == null)
                 {
-                    return null;
+                    response.Success = false;
+                    response.Message = "Could not retrieve words.";
+                    return response;
                 }
 
-                return wordsByType;
+                response.Success = true;
+                response.Message = "Successfully retrieved all words";
+                response.Data = wordsByType;
+                return response;
             }
-            catch(Exception)
+            catch(Exception ex)
             {
-                //Log error in db
-                throw;
+                _ = Task.Run(async () => await _exceptionsLogActions.LogException(ex.Message, "GetWordsByType"));
+                return new BaseResponse<List<Words>> { Message = $"An error occured. Error: {ex.Message}", Success = false};
             }
         }
 
-        public async Task<string> AddWord(WordsDTOCreate word)
+        public async Task<BaseResponse> AddWord(WordsDTOCreate word)
         {
             try
             {
+                var response = new BaseResponse();
                 Words newWord = new()
                 {
                     Word = word.Word,
@@ -53,14 +63,19 @@ namespace SentenceBuilderAPI.Actions.ActionClasses
 
                 if(saveChange <= 0)
                 {
-                    return "Adding word failed";
+                    response.Success = false;
+                    response.Message = "Could not add word";
+                    return response;
                 }
 
-                return "Added word successfully";
+                response.Success = true;
+                response.Message = "Successfully added word";
+                return response;
             }
-            catch(Exception)
+            catch(Exception ex)
             {
-                throw;
+                _ = Task.Run(async () => await _exceptionsLogActions.LogException(ex.Message, "AddWord"));
+                return new BaseResponse { Message = $"An error occured. Error: {ex.Message}", Success = false}; 
             }
         }
     }

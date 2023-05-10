@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using SentenceBuilderAPI.Models;
 using SentenceBuilderAPI.Actions.Interfaces;
+using SentenceBuilderAPI.Models.BaseResponse;
+using SentenceBuilderAPI.Models.DTOModels.SentenceDTO;
 
 namespace SentenceBuilderAPI.Controllers
 {
@@ -10,23 +12,39 @@ namespace SentenceBuilderAPI.Controllers
     public class SentenceController : ControllerBase
     {
         private readonly ISentenceActions _sentenceActions;
+        private readonly IExceptionsLogActions _exceptionsLogActions;
 
-        public SentenceController(ISentenceActions sentenceActions)
+        public SentenceController(ISentenceActions sentenceActions, IExceptionsLogActions exceptionsLogActions)
         {
             _sentenceActions = sentenceActions;
+            _exceptionsLogActions = exceptionsLogActions;
         }
 
         [HttpGet("GetAllSentences")]
-        public ActionResult<IEnumerable<Sentence>> GetAllSentences()
+        public ActionResult<BaseResponse<List<Sentence>>> GetAllSentences()
         {
             try
             {
                 return _sentenceActions.GetAllSenctences();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //log error in db
-                throw; 
+                _ = Task.Run(async () => await _exceptionsLogActions.LogException(ex.Message, "GetAllSentences"));
+                return new BaseResponse<List<Sentence>> { Message = $"An error occured. Error: {ex.Message}", Success = false}; 
+            }
+        }
+
+        [HttpPost("CreateSentence")]
+        public async Task<BaseResponse> CreateSentence([FromBody] SentenceDTOCreate sentenceDTO)
+        {
+            try
+            {
+                return await _sentenceActions.CreateSentence(sentenceDTO);
+            }
+            catch (Exception ex)
+            {
+                _ = Task.Run(async () => await _exceptionsLogActions.LogException(ex.Message, "CreateSentence"));
+                return new BaseResponse { Success = false, Message = $"An error occured. Error: {ex.Message}" };
             }
         }
     }
