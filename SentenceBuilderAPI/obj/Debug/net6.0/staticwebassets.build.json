@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "9uOYCEygsRQcHxkEVPyyVdXSiRfchzEJ2Vx9WwuRJwk=",
+  "Source": "SentenceBuilderAPI",
+  "BasePath": "_content/SentenceBuilderAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
