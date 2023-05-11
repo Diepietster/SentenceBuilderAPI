@@ -5,6 +5,7 @@ using SentenceBuilderAPI.Models;
 using System;
 using SentenceBuilderAPI.Models.BaseResponse;
 using SentenceBuilderAPI.Models.DTOModels.WordDTO;
+using System.Net;
 
 namespace SentenceBuilderAPI.Controllers
 {
@@ -22,6 +23,7 @@ namespace SentenceBuilderAPI.Controllers
         }
 
         [HttpGet("GetAllWordsByType/{wordTypeId}")]
+        [ProducesResponseTypeAttribute((int)HttpStatusCode.OK, Type = typeof(BaseResponse<List<Words>>))]
         public async Task<BaseResponse<List<Words>>> GetAllWordsByType(int wordTypeId)
         {
             try
@@ -36,6 +38,7 @@ namespace SentenceBuilderAPI.Controllers
         }
 
         [HttpPost("AddWord")]
+        [ProducesResponseTypeAttribute((int)HttpStatusCode.OK, Type = typeof(BaseResponse))]
         public async Task<BaseResponse> AddWord([FromBody] WordsDTOCreate word)
         {
             try

@@ -4,6 +4,7 @@ using SentenceBuilderAPI.Models;
 using SentenceBuilderAPI.Actions.Interfaces;
 using SentenceBuilderAPI.Models.BaseResponse;
 using SentenceBuilderAPI.Models.DTOModels.SentenceDTO;
+using System.Net;
 
 namespace SentenceBuilderAPI.Controllers
 {
@@ -21,6 +22,7 @@ namespace SentenceBuilderAPI.Controllers
         }
 
         [HttpGet("GetAllSentences")]
+        [ProducesResponseTypeAttribute((int)HttpStatusCode.OK, Type = typeof(BaseResponse<List<Sentence>>))]
         public async Task<BaseResponse<List<Sentence>>> GetAllSentences()
         {
             try
@@ -35,6 +37,7 @@ namespace SentenceBuilderAPI.Controllers
         }
 
         [HttpPost("CreateSentence")]
+        [ProducesResponseTypeAttribute((int)HttpStatusCode.OK, Type = typeof(BaseResponse))]
         public async Task<BaseResponse> CreateSentence([FromBody] SentenceDTOCreate sentenceDTO)
         {
             try

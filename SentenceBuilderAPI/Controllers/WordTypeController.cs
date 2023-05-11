@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SentenceBuilderAPI.Actions.Interfaces;
 using SentenceBuilderAPI.Models;
 using SentenceBuilderAPI.Models.BaseResponse;
+using System.Net;
 
 namespace SentenceBuilderAPI.Controllers
 {
@@ -20,6 +21,7 @@ namespace SentenceBuilderAPI.Controllers
         }
 
         [HttpGet("GetAllWordTypes")]
+        [ProducesResponseTypeAttribute((int)HttpStatusCode.OK, Type = typeof(BaseResponse<List<WordType>>))]
         public async Task<BaseResponse<List<WordType>>> GetAllWordTypes()
         {
             try
